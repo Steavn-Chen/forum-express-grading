@@ -1,5 +1,4 @@
 const bcrypt = require('bcryptjs')
-const { rawListeners } = require('superagent')
 const db = require('../models')
 const User = db.User
 
