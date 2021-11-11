@@ -28,7 +28,7 @@ const userController = {
             })
           }
         })
-      }
+    }
   },
   
   signInPage: (req, res) => {

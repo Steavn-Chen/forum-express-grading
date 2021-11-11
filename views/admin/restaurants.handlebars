@@ -1,11 +1,22 @@
 <h1>餐廳後台</h1>
 
-<a href='/admin/restaurants/create'>
-  <button type="button" class="btn btn-primary">New Restaurant</button>
-</a>
+<div class="btn-group back-btn-group d-flex justify-content-between mt-3">
+  <div class="left">
+    <a href='/admin/restaurants/create'>
+      <button type="button" class="btn btn-primary">New Restaurant</button>
+    </a>
+  </div>
+  <div class="right">
+    <a href='/admin/restaurants'>
+      <button type="button" class="btn btn-outline-warning mr-2">Restaurants</button>
+    </a>
+    <a href='/admin/users'>
+      <button type="button" class="btn btn-outline-success">Users</button>
+    </a>
+  </div>
+</div>
 
-<br/>
-<br/>
+<br />
 
 <table class="table">
   <thead class="thead-dark">
@@ -23,7 +34,7 @@
       <td>
         <button type="button" class="btn btn-link">
           <a href="/admin/restaurants/{{this.id}}">
-          Show
+            Show
           </a>
         </button>
         <button type="button" class="btn btn-link">

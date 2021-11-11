@@ -11,17 +11,16 @@ if (process.env.NODE_ENV !== 'production') {
 const app = express()
 const port = process.env.PORT || 3000
 
-app.engine("handlebars", handlebars({ defaultLayout: 'main' }))
+app.engine('handlebars', handlebars({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
 
-
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(session({secret: 'secret', resave: false, saveUninitialized: false }))
+app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }))
 app.use(flash())
 app.use(methodOverride('_method'))
 app.use(passport.initialize())
 app.use(passport.session())
-app.use('/upload',express.static(__dirname + '/upload'))
+app.use('/upload', express.static(__dirname + '/upload'))
 
 app.use((req, res, next) => {
   res.locals.success_messages = req.flash('success_messages')
@@ -34,6 +33,6 @@ app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
 
-require("./routes")(app, passport);
+require('./routes')(app, passport)
 
 module.exports = app
