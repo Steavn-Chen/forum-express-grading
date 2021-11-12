@@ -8,17 +8,17 @@ const helpers = require('../_helpers')
 
 module.exports = (app) => {
   const authenticated = (req, res, next) => {
-    // if (req.isAuthenticated()) {
-    if (helpers.ensureAuthenticated(req)) {
+    if (req.isAuthenticated()) {
+    // if (helpers.ensureAuthenticated(req)) {
       return next()
     }
     res.redirect('/signin')
   }
   const authenticatedAdmin = (req, res, next) => {
-    // if (req.isAuthenticated()) {
-    //   if (req.user.isAdmin) { return next() }
-    if (helpers.ensureAuthenticated(req)) {
-      if (helpers.getUser(req).isAdmin)
+    if (req.isAuthenticated()) {
+      if (req.user.isAdmin) { return next() }
+    // if (helpers.ensureAuthenticated(req)) {
+    //   if (helpers.getUser(req).isAdmin)
       return res.redirect('/')
     }
     res.redirect('/signin')
