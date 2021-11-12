@@ -2,7 +2,7 @@ node_modules/
 temp/
 upload/
 
-# 
-.vscode
+
 .DS_Store
 .env
+.vscode

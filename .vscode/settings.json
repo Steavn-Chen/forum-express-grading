@@ -1,6 +1,0 @@
-{
- "editor.tabCompletion": "on",
- "emmet.triggerExpansionOnTab": true  ,
-  "prettier.semi": false,
-  "editor.formatOnPaste": false,
-}
