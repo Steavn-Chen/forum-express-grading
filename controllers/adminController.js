@@ -17,6 +17,7 @@ const adminController = {
   },
 
   postRestaurant: (req, res) => {
+    const { name, tel, address, opening_hours, description } = req.body
     if (!req.body.name) {
       req.flash('error_messages', 'name didn`t exist')
       res.redirect('back')
@@ -25,26 +26,26 @@ const adminController = {
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID)
       imgur.upload(file.path, (err, img) => {
-          return Restaurant.create({
-            name: req.body.name,
-            tel: req.body.tel,
-            address: req.body.address,
-            opening_hours: req.body.opening_hours,
-            description: req.body.description,
-            image: file ? img.data.link : null
-          }).then((restaurant) => {
-            req.flash('success_messages', 'restaurant was successfully created')
-            res.redirect('/admin/restaurants')
-          })
+        return Restaurant.create({
+          name,
+          tel,
+          address,
+          opening_hours,
+          description,
+          image: file ? img.data.link : null
+        }).then((restaurant) => {
+          req.flash('success_messages', 'restaurant was successfully created')
+          res.redirect('/admin/restaurants')
+        })
       })
     } else {
       return Restaurant.create({
-        name: req.body.name,
-        tel: req.body.tel,
-        address: req.body.address,
-        opening_hours: req.body.opening_hours,
-        description: req.body.description,
-        image: null
+        name,
+        tel,
+        address,
+        opening_hours,
+        description,
+        image:  null
       }).then(restaurant => {
         req.flash('success_messages', 'restaurant was successfully created')
         res.redirect('/admin/restaurants')
@@ -69,6 +70,7 @@ const adminController = {
   },
 
   putRestaurant: (req, res) => {
+    const { name, tel, address, opening_hours, description } = req.body
     if (!req.body.name) {
       req.flash('error_messages', 'name didn`t exist')
       return res.redirect('back')
@@ -77,37 +79,37 @@ const adminController = {
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID)
       imgur.upload(file.path, (err, img) => {
-          return Restaurant.findByPk(req.params.id).then((restaurant) => {
-            restaurant
+        return Restaurant.findByPk(req.params.id).then((restaurant) => {
+          restaurant
             .update({
-              name: req.body.name,
-              tel: req.body.tel,
-              address: req.body.address,
-              opening_hours: req.body.opening_hours,
-              description: req.body.description,
+              name,
+              tel,
+              address,
+              opening_hours,
+              description,
               image: file ? img.data.link : restaurant.image
             })
             .then((restaurant) => { console.log(restaurant)
               req.flash('success_messages', 'restaurants was successfully update')
               res.redirect('/admin/restaurants')
             })
-          })
+        })
       })
     } else {
       return Restaurant.findByPk(req.params.id).then((restaurant) => {
-          restaurant
-            .update({
-              name: req.body.name,
-              tel: req.body.tel,
-              address: req.body.address,
-              opening_hours: req.body.opening_hours,
-              description: req.body.description,
-              image: restaurant.image
-            })
-            .then(restaurant => {
-              req.flash('success_messages', 'restaurant was successfully update')
-              res.redirect('/admin/restaurants')
-            })
+        restaurant
+          .update({
+            name,
+            tel,
+            address,
+            opening_hours,
+            description,
+            image: restaurant.image
+          })
+          .then(restaurant => {
+            req.flash('success_messages', 'restaurant was successfully update')
+            res.redirect('/admin/restaurants')
+          })
       })
     }
   },
@@ -137,17 +139,10 @@ const adminController = {
           req.flash('error_messages', '禁止變更管理者權限')
           return res.redirect('back')
         }  
-        if (user.isAdmin) { 
-          return user.update({ isAdmin: false }).then(user => {
-            req.flash('success_messages', '使用者權限變更成功')
-            return res.redirect('/admin/users')
-          })      
-        } else { 
-          return user.update({ isAdmin: true }).then(user => {
-            req.flash('success_messages', '使用者權限變更成功')       
-            return res.redirect('/admin/users')  
-          })     
-        }    
+        return user.update({ isAdmin: !user.isAdmin }).then(user => {
+          req.flash('success_messages', '使用者權限變更成功')
+          res.redirect('/admin/users')
+        })
       })
   }
 }
