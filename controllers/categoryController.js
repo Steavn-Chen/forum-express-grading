@@ -1,9 +1,9 @@
 const db = require('../models')
 const Category = db.Category
 let categoryController = {
-  
+
   getCategories: (req, res) => {
-    let categoryId = req.params.id
+    const categoryId = req.params.id
     return Category.findAll({
       raw: true,
       nest: true
@@ -48,6 +48,17 @@ let categoryController = {
             })
         })
     }
+  },
+
+  deleteCategory: (req, res) => {
+    const categoryId = req.params.id
+    return Category.findByPk(categoryId)
+      .then(category => {
+        category.destroy()
+          .then(category => {
+            res.redirect('/admin/categories')
+          })
+      })
   }
 }
 
