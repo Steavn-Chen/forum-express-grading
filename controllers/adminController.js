@@ -27,7 +27,7 @@ const adminController = {
   },
 
   postRestaurant: (req, res) => {
-    const { name, tel, address, opening_hours, description, categoryId } = req.body
+    const { categoryId } = req.body
     if (!req.body.name) {
       req.flash('error_messages', 'name didn`t exist')
       res.redirect('back')
@@ -37,11 +37,7 @@ const adminController = {
       imgur.setClientID(IMGUR_CLIENT_ID)
       imgur.upload(file.path, (err, img) => {
         return Restaurant.create({
-          name,
-          tel,
-          address,
-          opening_hours,
-          description,
+         ...req.body,
           image: file ? img.data.link : null,
           CategoryId:categoryId
         }).then((restaurant) => {
@@ -51,14 +47,10 @@ const adminController = {
       })
     } else {
       return Restaurant.create({
-        name,
-        tel,
-        address,
-        opening_hours,
-        description,
-        image:  null,
-        CategoryId:categoryId
-      }).then(restaurant => {
+        ...req.body,
+         image: null,
+         CategoryId:categoryId
+       }).then((restaurant) => {
         req.flash('success_messages', 'restaurant was successfully created')
         res.redirect('/admin/restaurants')
       })
@@ -88,7 +80,7 @@ const adminController = {
   },
 
   putRestaurant: (req, res) => {console.log(req.body)
-    const { name, tel, address, opening_hours, description, categoryId } = req.body
+    const { categoryId } = req.body
     if (!req.body.name) {
       req.flash('error_messages', 'name didn`t exist')
       return res.redirect('back')
@@ -100,11 +92,7 @@ const adminController = {
         return Restaurant.findByPk(req.params.id).then((restaurant) => {
           restaurant
             .update({
-              name,
-              tel,
-              address,
-              opening_hours,
-              description,
+              ...req.body,
               image: file ? img.data.link : restaurant.image,
               CategoryId:categoryId
             })
@@ -118,11 +106,7 @@ const adminController = {
       return Restaurant.findByPk(req.params.id).then((restaurant) => {
         restaurant
           .update({
-            name,
-            tel,
-            address,
-            opening_hours,
-            description,
+            ...req.body,
             image: restaurant.image,
             CategoryId:categoryId
           })
@@ -150,7 +134,6 @@ const adminController = {
     })
   },
   
-  // 交作業寫法 之二 畫面反應有時user/admin正常
   toggleAdmin: (req, res) => { 
     const id = req.params.id
     return User.findByPk(id)
