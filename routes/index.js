@@ -19,15 +19,20 @@ module.exports = (app) => {
   const authenticatedAdmin = (req, res, next) => {
     if (req.isAuthenticated()) {
       if (req.user.isAdmin) { return next() }
-    // if (helpers.ensureAuthenticated(req)) {
-    //   if (helpers.getUser(req).isAdmin)
-      return res.redirect('/')
+      // if (helpers.ensureAuthenticated(req)) {
+        //   if (helpers.getUser(req).isAdmin)
+        return res.redirect('/')
+      }
+      res.redirect('/signin')
     }
-    res.redirect('/signin')
-  }
-  
+    
   app.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
   app.get('/restaurants', authenticated, restController.getRestaurants)
+  app.get('/restaurants/:id', authenticated, restController.getRestaurant)
+    
+  app.post('/comments', authenticated, commentController.postComment)
+  app.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
+
   app.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/restaurants'))
   app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
   app.get('/admin/restaurants/create', authenticatedAdmin, adminController.createRestaurant)
@@ -46,8 +51,6 @@ module.exports = (app) => {
   app.put('/admin/categories/:id', authenticatedAdmin, categoryController.putCategory)
   app.delete('/admin/categories/:id', authenticatedAdmin, categoryController.deleteCategory)
 
-  app.get('/restaurants/:id', authenticated, restController.getRestaurant)
-  app.post('/comments', authenticated, commentController.postComment)
 
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)
