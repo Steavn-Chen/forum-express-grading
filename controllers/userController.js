@@ -4,6 +4,7 @@ const fs = require('fs')
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
+const Comment = db.Comment
 
 const userController = {
   signUpPage: (req, res) => {
@@ -50,8 +51,10 @@ const userController = {
   },
 
   getUser: (req, res) => { console.log('getUser',req.params)
-    User.findByPk(req.params.id).then(user => {console.log(user)
-      return res.render('profile',{ user: user.toJSON() })
+    User.findByPk(req.params.id, { include: [Comment] } ).then(user => {
+      let commentCount = user.Comments.length
+      console.log(user,commentCount)
+      return res.render('profile',{ user: user.toJSON(), commentCount:commentCount })
     })
   },
 
@@ -62,20 +65,23 @@ const userController = {
   },
 
   putUser: (req, res) => {
-    console.log('puUser',req.params, req.user)
+    console.log('putUser',req.params, req.user)
+    if (!req.body.name || !req.body.email) {
+      // if (!req.body.name) {
+      req.flash('error_messages', '名字與信箱不能為空!')
+      res.redirect('back')
+    }
     const { file } = req
     if (file) {
-      fs.readFile(file.path, (err, data) => {
-        if (err) console.log('Error: ', err)
-        fs.writeFile(`upload/${file.originalname}`, data, () => {
-          return User.findByPk(req.params.id)
-          .then(user => { 
-            console.log(req.body, user)
-            user.update({ ...req.body, image: file ? `/upload/${file.originalname}` : null })
-            .then(() => {
-              req.flash('success_messages', '使用者資料修改成功')
-              return res.redirect(`/users/${ req.params.id }`)
-            })
+      imgur.setClientID(IMGUR_CLIENT_ID)
+      imgur.upload(file.path, (err, img) => {
+        return User.findByPk(req.params.id)
+        .then(user => { 
+          console.log(req.body, user)
+          user.update({ ...req.body, image: file ? img.data.link : null })
+          .then(() => {
+            req.flash('success_messages', '使用者資料修改成功')
+            return res.redirect(`/users/${ req.params.id }`)
           })
         })
       })
