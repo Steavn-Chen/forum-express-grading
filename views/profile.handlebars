@@ -7,7 +7,6 @@
       <div class="card-body ml-5 my-4">
         <h4 class="card-title">名稱: {{user.name}}</h4>
         <h5 class="card-text my-5">信箱: {{user.email}}</h5>
-        <!-- <h6 class="card-text my-5">{{commentCount}} 則己評論的餐廳</h6> -->
         <h6 class="card-text my-5">{{user.Comments.length}} 則己評論的餐廳</h6>
         <a href="/users/{{user.id}}/edit" class="btn btn-primary">修改</a>
         <a href="/restaurants" class="btn btn-secondary">首頁</a>
@@ -17,7 +16,6 @@
 </div>
 
 <div class="card">
-  <!-- <div class="card-header">{{commentCount}} 則己評論的餐廳</div> -->
   <div class="card-header">{{user.Comments.length}} 則己評論的餐廳</div>
   <div class="text-left ">
     {{#each user.Comments}}

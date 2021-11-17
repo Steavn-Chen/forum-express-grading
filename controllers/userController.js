@@ -52,6 +52,9 @@ const userController = {
   },
 
   getUser: (req, res) => {
+    // if (Number(req.params.id) !== req.user.id) {
+    //   return res.redirect('back')
+    // }
     return User.findByPk(req.params.id, {
       // raw: true,
       // nest: true,
@@ -61,12 +64,18 @@ const userController = {
   },
 
   editUser: (req, res) => {
+    // if (Number(req.params.id) !== req.user.id) {
+    //   return res.redirect('back')
+    // }
     return User.findByPk(req.params.id).then(user => {
       return res.render('edit',{ user: user.toJSON() })
     })
   },
 
   putUser: (req, res) => {
+    // if (Number(req.params.id) !== req.user.id) {
+    //   return res.redirect('back')
+    // }
     if (!req.body.name || !req.body.email) {
       req.flash('error_messages', '名字與信箱不能為空!')
       res.redirect('back')
