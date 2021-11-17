@@ -58,4 +58,7 @@ module.exports = (app) => {
   app.get('/signin', userController.signInPage)
   app.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureMessage: true }), userController.signIn)
   app.get('/logout', userController.logout)
+
+  app.get('/users/:id' , authenticated, userController.getUser)
+  app.get('/users/:id/edit', authenticated, userController.editUser)
 }
