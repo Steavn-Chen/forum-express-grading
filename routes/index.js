@@ -10,17 +10,17 @@ const helpers = require('../_helpers')
 
 module.exports = (app) => {
   const authenticated = (req, res, next) => {
-    if (req.isAuthenticated()) {
-    // if (helpers.ensureAuthenticated(req)) {
+    // if (req.isAuthenticated()) {
+    if (helpers.ensureAuthenticated(req)) {
       return next()
     }
     res.redirect('/signin')
   }
   const authenticatedAdmin = (req, res, next) => {
-    if (req.isAuthenticated()) {
-      if (req.user.isAdmin) { return next() }
-      // if (helpers.ensureAuthenticated(req)) {
-        //   if (helpers.getUser(req).isAdmin)
+    // if (req.isAuthenticated()) {
+    //   if (req.user.isAdmin) { return next() }
+      if (helpers.ensureAuthenticated(req)) {
+          if (helpers.getUser(req).isAdmin)
         return res.redirect('/')
       }
       res.redirect('/signin')
@@ -61,4 +61,5 @@ module.exports = (app) => {
 
   app.get('/users/:id' , authenticated, userController.getUser)
   app.get('/users/:id/edit', authenticated, userController.editUser)
+  app.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
 }
