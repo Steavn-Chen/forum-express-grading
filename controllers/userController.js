@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
 const Comment = db.Comment
+const Restaurant = db.Restaurant
 
 const userController = {
   signUpPage: (req, res) => {
@@ -50,24 +51,23 @@ const userController = {
     res.redirect('/signin')
   },
 
-  getUser: (req, res) => { console.log('getUser',req.params)
-    User.findByPk(req.params.id, { include: [Comment] } ).then(user => {
-      let commentCount = user.Comments.length
-      console.log(user,commentCount)
-      return res.render('profile',{ user: user.toJSON(), commentCount:commentCount })
+  getUser: (req, res) => {
+    return User.findByPk(req.params.id, {
+      // raw: true,
+      // nest: true,
+      include: [ Comment, { model: Comment, include: [Restaurant] }] }).then(user => {
+      return res.render('profile',{ user: user.toJSON() })
     })
   },
 
-  editUser: (req, res) => { console.log('editUser',req.params, req.user)
-    User.findByPk(req.params.id).then(user => {
+  editUser: (req, res) => {
+    return User.findByPk(req.params.id).then(user => {
       return res.render('edit',{ user: user.toJSON() })
     })
   },
 
   putUser: (req, res) => {
-    console.log('putUser',req.params, req.user)
     if (!req.body.name || !req.body.email) {
-      // if (!req.body.name) {
       req.flash('error_messages', '名字與信箱不能為空!')
       res.redirect('back')
     }
@@ -80,16 +80,17 @@ const userController = {
           console.log(req.body, user)
           user.update({ ...req.body, image: file ? img.data.link : null })
           .then(() => {
-            req.flash('success_messages', '使用者資料修改成功')
+            req.flash('success_messages', '使用者資料編輯成功')
             return res.redirect(`/users/${ req.params.id }`)
           })
         })
       })
     } else {
       return User.findByPk(req.params.id)
-      .then(user => { user.update({ ...req.body, image: req.user.image })
+      .then(user => {
+        user.update({ ...req.body, image: user.image })
         .then(() => {
-          req.flash('success_messages', '使用者資料修改成功')
+          req.flash('success_messages', '使用者資料編輯成功')
           return res.redirect(`/users/${ req.params.id }`)
         })
       })
