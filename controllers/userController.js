@@ -7,7 +7,6 @@ const User = db.User
 const Comment = db.Comment
 const Restaurant = db.Restaurant
 
-
 const userController = {
   signUpPage: (req, res) => {
     return res.render('signup')
