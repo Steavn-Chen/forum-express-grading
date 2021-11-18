@@ -1,10 +1,25 @@
+{{!-- <div class="row no-gutters bg-light position-relative mt-3 border border-1">
+  <div class="col-md-6 mb-md-0 p-md-4">
+    <img src="{{user.image}}" class="w-50" alt="..." >
+  </div>
+  <div class="col-md-6 position-static p-4 pl-md-0 my-auto">
+    <h4 class="mt-0">名稱 : {{user.name}}</h4>
+    <h5 class="card-text my-4">信箱 : {{user.email}}</h5>
+    <h6 class="card-text my-4">{{user.Comments.length}} 則己評論的餐廳</h6>
+    <div class="my-auto">
+      <a href="/users/{{user.id}}/edit" class="btn btn-primary">修改</a>
+      <a href="/restaurants" class="btn btn-secondary">首頁</a>
+    </div>
+  </div>
+</div> --}}
+
 <div class="card mb-3">
   <div class="row no-gutters">
-    <div class="col-md-4">
-      <img src="{{user.image}}" alt="..." style="width: 300px; height:300px">
+    <div class="col-md-5">
+      <img src="{{user.image}}" alt="..." style="width: 300px; height:300px" >
     </div>
-    <div class="col-md-8">
-      <div class="card-body ml-5 my-4">
+    <div class="col-md-7">
+      <div class="card-body  my-4">
         <h4 class="card-title">名稱: {{user.name}}</h4>
         <h5 class="card-text my-5">信箱: {{user.email}}</h5>
         <h6 class="card-text my-5">{{user.Comments.length}} 則己評論的餐廳</h6>

@@ -105,6 +105,20 @@ const restController = {
     //     })
     //   })
     // })
+  },
+
+  getDashBoard: (req, res) => {
+    console.log(req.params)
+    return Restaurant.findByPk(req.params.id, {
+      // raw: true,
+      // nest: true,
+      include: [Category, Comment]
+    }).then(restaurant => {
+      console.log(restaurant)
+      return res.render('dashboard', {
+        restaurant: restaurant.toJSON()
+      })
+    })
   }
 }
 
