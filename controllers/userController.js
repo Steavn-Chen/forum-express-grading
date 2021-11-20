@@ -105,7 +105,7 @@ const userController = {
     }
   },
 
-  addFavorite: (req, res) => {console.log(req.params,req.user)
+  addFavorite: (req, res) => {
     return Favorite.create({
       UserId: req.user.id,
       RestaurantId: req.params.restaurantId
@@ -114,7 +114,7 @@ const userController = {
     })
   },
 
-  removeFavorite: (req, res) => {console.log(req.params,req.user)
+  removeFavorite: (req, res) => {
     return Favorite.findOne({
       where: {
         UserId: req.user.id,

@@ -29,6 +29,16 @@ module.exports = (app) => {
   app.get('/restaurants/:id', authenticated, restController.getRestaurant)
   app.get('/restaurants/:id/dashboard', authenticated, restController.getDashBoard)
 
+  app.get('/users/:id' , authenticated, userController.getUser)
+  app.get('/users/:id/edit', authenticated, userController.editUser)
+  app.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
+
+  app.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
+  app.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
+
+  app.post('/comments', authenticated, commentController.postComment)
+  app.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
+
   app.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/restaurants'))
   app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
   app.get('/admin/restaurants/create', authenticatedAdmin, adminController.createRestaurant)
@@ -47,7 +57,6 @@ module.exports = (app) => {
   app.put('/admin/categories/:id', authenticatedAdmin, categoryController.putCategory)
   app.delete('/admin/categories/:id', authenticatedAdmin, categoryController.deleteCategory)
 
-
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)
 
@@ -55,13 +64,4 @@ module.exports = (app) => {
   app.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureMessage: true }), userController.signIn)
   app.get('/logout', userController.logout)
 
-  app.get('/users/:id' , authenticated, userController.getUser)
-  app.get('/users/:id/edit', authenticated, userController.editUser)
-  app.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
-
-  app.post('/comments', authenticated, commentController.postComment)
-  app.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
-
-  app.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
-  app.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
 }
