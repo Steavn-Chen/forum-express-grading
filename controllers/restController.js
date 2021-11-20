@@ -58,6 +58,11 @@ const restController = {
         { model: Comment, include: [User] }
        ]
     }).then(restaurant => {
+      console.log('viewCounts', restaurant.viewCounts)
+      // restaurant.increment({ viewCounts: 1, address: 10}, { by: 1 }) 
+      restaurant.increment({ viewCounts: 1}) 
+      console.log('viewCounts', restaurant.viewCounts)
+      
       return res.render('restaurant', {
         restaurant: restaurant.toJSON()
       })
@@ -86,35 +91,14 @@ const restController = {
         comments: comments
       })
     })
-    // return Restaurant.findAll({
-    //   limit: 10,
-    //   raw: true,
-    //   nest: true,
-    //   order: [['createdAt', 'DESC']],
-    //   include: [Category]
-    // }).then(restaurants => {
-    //   Comment.findAll({
-    //     limit: 10,
-    //     raw: true,
-    //     nest: true,
-    //     order: [['createdAt', 'DESC']]
-    //   }).then(comments => {
-    //     return res.render('feeds', {
-    //       restaurants: restaurants,
-    //       comments: comments
-    //     })
-    //   })
-    // })
   },
 
   getDashBoard: (req, res) => {
-    console.log(req.params)
     return Restaurant.findByPk(req.params.id, {
       // raw: true,
       // nest: true,
       include: [Category, Comment]
     }).then(restaurant => {
-      console.log(restaurant)
       return res.render('dashboard', {
         restaurant: restaurant.toJSON()
       })

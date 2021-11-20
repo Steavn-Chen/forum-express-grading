@@ -6,6 +6,8 @@ const db = require('../models')
 const User = db.User
 const Comment = db.Comment
 const Restaurant = db.Restaurant
+const helpers = require('../_helpers')
+
 
 const userController = {
   signUpPage: (req, res) => {
@@ -52,9 +54,6 @@ const userController = {
   },
 
   getUser: (req, res) => {
-    // if (Number(req.params.id) !== req.user.id) {
-    //   return res.redirect('back')
-    // }
     return User.findByPk(req.params.id, {
       // raw: true,
       // nest: true,
@@ -64,29 +63,28 @@ const userController = {
   },
 
   editUser: (req, res) => {
-    // if (Number(req.params.id) !== req.user.id) {
-    //   return res.redirect('back')
-    // }
+    const operatorId = helpers.getUser(req).id
+    if (Number(req.params.id) !== operatorId) {
+      req.flash('error_messages', '只能編輯自己的資訊 !')
+      return res.redirect(`/users/${operatorId}`)
+    }
     return User.findByPk(req.params.id).then(user => {
       return res.render('edit',{ user: user.toJSON() })
     })
   },
 
   putUser: (req, res) => {
-    // if (Number(req.params.id) !== req.user.id) {
-    //   return res.redirect('back')
-    // }
     if (!req.body.name || !req.body.email) {
       req.flash('error_messages', '名字與信箱不能為空!')
       res.redirect('back')
     }
+    
     const { file } = req
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID)
       imgur.upload(file.path, (err, img) => {
         return User.findByPk(req.params.id)
-        .then(user => { 
-          console.log(req.body, user)
+        .then(user => {
           user.update({ ...req.body, image: file ? img.data.link : null })
           .then(() => {
             req.flash('success_messages', '使用者資料編輯成功')

@@ -79,7 +79,7 @@ const adminController = {
     })
   },
 
-  putRestaurant: (req, res) => {console.log(req.body)
+  putRestaurant: (req, res) => {
     const { categoryId } = req.body
     if (!req.body.name) {
       req.flash('error_messages', 'name didn`t exist')
