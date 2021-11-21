@@ -25,7 +25,8 @@ passport.use(new LocalStrategy(
    passport.deserializeUser((id, cb) => {
      User.findByPk(id, {
        include: [
-         { model: Restaurant, as: 'FavoritedRestaurants'}
+         { model: Restaurant, as: 'FavoritedRestaurants'},
+         { model: Restaurant, as: 'LikedRestaurants'}
        ]
      })
        .then(user => {
