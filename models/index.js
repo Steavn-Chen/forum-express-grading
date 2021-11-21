@@ -33,7 +33,7 @@ fs.readdirSync(__dirname)
       sequelize,
       Sequelize.DataTypes
     )
-    db[model.name] = model;
+    db[model.name] = model
   })
 
 // 設定 Models 之間的關聯

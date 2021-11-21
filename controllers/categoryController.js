@@ -1,6 +1,6 @@
 const db = require('../models')
 const Category = db.Category
-let categoryController = {
+const categoryController = {
 
   getCategories: (req, res) => {
     const categoryId = req.params.id
@@ -10,7 +10,7 @@ let categoryController = {
     }).then(categories => {
       if (categoryId) {
         Category.findByPk(categoryId).then(category => {
-        return res.render('admin/categories', { categories: categories, category: category.toJSON() })
+          return res.render('admin/categories', { categories: categories, category: category.toJSON() })
         })
       } else {
         return res.render('admin/categories', { categories: categories })
@@ -27,9 +27,9 @@ let categoryController = {
       return Category.create({
         name
       })
-      .then(category => {
-        res.redirect('/admin/categories')
-      })
+        .then(category => {
+          res.redirect('/admin/categories')
+        })
     }
   },
 

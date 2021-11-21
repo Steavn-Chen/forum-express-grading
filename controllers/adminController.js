@@ -8,11 +8,11 @@ const User = db.User
 
 const adminController = {
   getRestaurants: (req, res) => {
-    return Restaurant.findAll({ 
+    return Restaurant.findAll({
       raw: true,
       nest: true,
       include: [Category]
-     }).then((restaurants) => {
+    }).then((restaurants) => {
       return res.render('admin/restaurants', { restaurants: restaurants })
     })
   },
@@ -22,7 +22,7 @@ const adminController = {
       raw: true,
       nest: true
     }).then(categories => {
-      return res.render('admin/create', { categories:categories })
+      return res.render('admin/create', { categories: categories })
     })
   },
 
@@ -37,9 +37,9 @@ const adminController = {
       imgur.setClientID(IMGUR_CLIENT_ID)
       imgur.upload(file.path, (err, img) => {
         return Restaurant.create({
-         ...req.body,
+          ...req.body,
           image: file ? img.data.link : null,
-          CategoryId:categoryId
+          CategoryId: categoryId
         }).then((restaurant) => {
           req.flash('success_messages', 'restaurant was successfully created')
           res.redirect('/admin/restaurants')
@@ -48,9 +48,9 @@ const adminController = {
     } else {
       return Restaurant.create({
         ...req.body,
-         image: null,
-         CategoryId:categoryId
-       }).then((restaurant) => {
+        image: null,
+        CategoryId: categoryId
+      }).then((restaurant) => {
         req.flash('success_messages', 'restaurant was successfully created')
         res.redirect('/admin/restaurants')
       })
@@ -72,9 +72,10 @@ const adminController = {
     }).then(categories => {
       return Restaurant.findByPk(req.params.id).then(
         (restaurant) => {
-          return res.render('admin/create', { 
+          return res.render('admin/create', {
             categories: categories,
-            restaurant: restaurant.toJSON() })
+            restaurant: restaurant.toJSON()
+          })
         })
     })
   },
@@ -94,7 +95,7 @@ const adminController = {
             .update({
               ...req.body,
               image: file ? img.data.link : restaurant.image,
-              CategoryId:categoryId
+              CategoryId: categoryId
             })
             .then((restaurant) => {
               req.flash('success_messages', 'restaurants was successfully update')
@@ -108,7 +109,7 @@ const adminController = {
           .update({
             ...req.body,
             image: restaurant.image,
-            CategoryId:categoryId
+            CategoryId: categoryId
           })
           .then(restaurant => {
             req.flash('success_messages', 'restaurant was successfully update')
@@ -125,7 +126,7 @@ const adminController = {
           .then(restaurant => {
             res.redirect('/admin/restaurants')
           })
-    })
+      })
   },
 
   getUsers: (req, res) => {
@@ -133,15 +134,15 @@ const adminController = {
       return res.render('admin/users', { users: users })
     })
   },
-  
-  toggleAdmin: (req, res) => { 
+
+  toggleAdmin: (req, res) => {
     const id = req.params.id
     return User.findByPk(id)
       .then(user => {
         if (user.name === 'root' || user.name === 'admin') {
           req.flash('error_messages', '禁止變更管理者權限')
           return res.redirect('back')
-        }  
+        }
         return user.update({ isAdmin: !user.isAdmin }).then(user => {
           req.flash('success_messages', '使用者權限變更成功')
           res.redirect('/admin/users')
@@ -151,4 +152,3 @@ const adminController = {
 }
 
 module.exports = adminController
-

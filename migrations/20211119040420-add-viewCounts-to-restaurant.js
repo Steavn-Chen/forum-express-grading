@@ -1,12 +1,10 @@
-'use strict';
-
-const { query } = require("express");
+'use strict'
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.addColumn('Restaurants', 'viewCounts', {
       type: Sequelize.INTEGER,
-      defaultValue: 0,
+      defaultValue: 0
 
     })
   },
@@ -14,4 +12,4 @@ module.exports = {
   down: async (queryInterface, Sequelize) => {
     await queryInterface.remoteColumn('Restaurantss', 'viewCounts')
   }
-};
+}

@@ -1,6 +1,5 @@
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
-const fs = require('fs')
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
@@ -38,11 +37,11 @@ const userController = {
         })
     }
   },
-  
+
   signInPage: (req, res) => {
     return res.render('signin')
   },
-  
+
   signIn: (req, res) => {
     req.flash('success_messages', '成功登入')
     res.redirect('/restaurants')
@@ -58,8 +57,9 @@ const userController = {
     return User.findByPk(req.params.id, {
       // raw: true,
       // nest: true,
-      include: [ Comment, { model: Comment, include: [Restaurant] }] }).then(user => {
-      return res.render('profile',{ user: user.toJSON() })
+      include: [Comment, { model: Comment, include: [Restaurant] }]
+    }).then(user => {
+      return res.render('profile', { user: user.toJSON() })
     })
   },
 
@@ -70,7 +70,7 @@ const userController = {
       return res.redirect(`/users/${operatorId}`)
     }
     return User.findByPk(req.params.id).then(user => {
-      return res.render('edit',{ user: user.toJSON() })
+      return res.render('edit', { user: user.toJSON() })
     })
   },
 
@@ -79,29 +79,29 @@ const userController = {
       req.flash('error_messages', '名字與信箱不能為空!')
       res.redirect('back')
     }
-    
+
     const { file } = req
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID)
       imgur.upload(file.path, (err, img) => {
         return User.findByPk(req.params.id)
-        .then(user => {
-          user.update({ ...req.body, image: file ? img.data.link : null })
-          .then(() => {
-            req.flash('success_messages', '使用者資料編輯成功')
-            return res.redirect(`/users/${ req.params.id }`)
+          .then(user => {
+            user.update({ ...req.body, image: file ? img.data.link : null })
+              .then(() => {
+                req.flash('success_messages', '使用者資料編輯成功')
+                return res.redirect(`/users/${req.params.id}`)
+              })
           })
-        })
       })
     } else {
       return User.findByPk(req.params.id)
-      .then(user => {
-        user.update({ ...req.body, image: user.image })
-        .then(() => {
-          req.flash('success_messages', '使用者資料編輯成功')
-          return res.redirect(`/users/${ req.params.id }`)
+        .then(user => {
+          user.update({ ...req.body, image: user.image })
+            .then(() => {
+              req.flash('success_messages', '使用者資料編輯成功')
+              return res.redirect(`/users/${req.params.id}`)
+            })
         })
-      })
     }
   },
 
@@ -118,7 +118,7 @@ const userController = {
     return Favorite.findOne({
       where: {
         UserId: req.user.id,
-        RestaurantId: req.params.restaurantId 
+        RestaurantId: req.params.restaurantId
       }
     }).then(favorite => {
       favorite.destroy()
@@ -127,7 +127,7 @@ const userController = {
   },
 
   addLike: (req, res) => {
-  const operatorId = helpers.getUser(req).id ? helpers.getUser(req).id : req.user.id
+    const operatorId = helpers.getUser(req).id ? helpers.getUser(req).id : req.user.id
     return Like.create({
       UserId: operatorId,
       RestaurantId: req.params.restaurantId
@@ -137,16 +137,16 @@ const userController = {
   },
 
   removeLike: (req, res) => {
-  const operatorId = helpers.getUser(req).id ? helpers.getUser(req).id : req.user.id
+    const operatorId = helpers.getUser(req).id ? helpers.getUser(req).id : req.user.id
     return Like.destroy({
       where: {
         UserId: operatorId,
         RestaurantId: req.params.restaurantId
       }
     })
-    .then(likes => {
-      return res.redirect('back')
-    })
+      .then(likes => {
+        return res.redirect('back')
+      })
   }
 }
 

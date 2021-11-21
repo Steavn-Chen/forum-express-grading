@@ -16,20 +16,20 @@ module.exports = (app) => {
     res.redirect('/signin')
   }
   const authenticatedAdmin = (req, res, next) => {
-      if (helpers.ensureAuthenticated(req)) {
-          if (helpers.getUser(req).isAdmin)  { return next() }
-        return res.redirect('/')
-      }
-      res.redirect('/signin')
+    if (helpers.ensureAuthenticated(req)) {
+      if (helpers.getUser(req).isAdmin) { return next() }
+      return res.redirect('/')
     }
-   
+    res.redirect('/signin')
+  }
+
   app.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
   app.get('/restaurants', authenticated, restController.getRestaurants)
   app.get('/restaurants/feeds', authenticated, restController.getFeeds)
   app.get('/restaurants/:id', authenticated, restController.getRestaurant)
   app.get('/restaurants/:id/dashboard', authenticated, restController.getDashBoard)
 
-  app.get('/users/:id' , authenticated, userController.getUser)
+  app.get('/users/:id', authenticated, userController.getUser)
   app.get('/users/:id/edit', authenticated, userController.editUser)
   app.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
 
@@ -50,11 +50,11 @@ module.exports = (app) => {
   app.get('/admin/restaurants/:id/edit', authenticatedAdmin, adminController.editRestaurant)
   app.put('/admin/restaurants/:id', authenticatedAdmin, upload.single('image'), adminController.putRestaurant)
   app.delete('/admin/restaurants/:id', authenticatedAdmin, adminController.deleteRestaurant)
-  
+
   app.get('/admin/users', authenticatedAdmin, adminController.getUsers)
   app.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.toggleAdmin)
 
-  app.get('/admin/categories', authenticatedAdmin, categoryController.getCategories) 
+  app.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)
   app.post('/admin/categories', authenticatedAdmin, categoryController.postCategory)
   app.get('/admin/categories/:id', authenticatedAdmin, categoryController.getCategories)
   app.put('/admin/categories/:id', authenticatedAdmin, categoryController.putCategory)
@@ -66,5 +66,4 @@ module.exports = (app) => {
   app.get('/signin', userController.signInPage)
   app.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureMessage: true }), userController.signIn)
   app.get('/logout', userController.logout)
-
 }
