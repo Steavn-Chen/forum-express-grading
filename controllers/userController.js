@@ -116,17 +116,17 @@ const userController = {
     })
   },
 
+  
   removeFavorite: (req, res) => {
-    // 設 operatorId 為測試跟本地端的 userId， userId 是從 1 開始所以找不到時設為 0
+    // 設 operatorId 為測試跟本地端的 userId， userId 是從 1 開始所以找不到時設為 0 
     const operatorId = 0 ? 0 : req.user.id
-    console.log('helpers.getUser(req).id', helpers.getUser(req).id, req.user)
     return Favorite.destroy({
       where: {
         UserId: operatorId,
-        RestaurantId: req.params.restaurantId
-      }
+        RestaurantId: req.params.restaurantId,
+      },
     }).then((favorite) => {
-      return res.redirect('back')
+        return res.redirect('back')
     })
   },
 
@@ -154,22 +154,17 @@ const userController = {
   },
 
   getTopUser: (req, res) => {
-    console.log('1')
     return User.findAll({
       include: [
-        { model: User, as: 'Followers' }
+        { model: User, as: 'Followers'}
       ]
     }).then(users => {
-      console.log(users)
-      users = users.map(user => ({
-        ...user.dataValues,
-        FollowerCount: user.Followers.length,
-        isFollowed: req.user.Followings.map(d => d.id).includes(user.id)
-      }))
-      console.log('userafter', users)
-      users = users.sort((a, b) => b.FollowerCount - a.FollowerCount)
-      console.log('aaaaaaa', users.length, users)
-      return res.render('topUser', { users: users })
+      users = users.map(user => ({...user.dataValues,
+      FollowerCount: user.Followers.length,
+      isFollowed: req.user.Followings.map(d => d.id).includes(user.id)
+    }))
+      users = users.sort((a, b) => b.FollowerCount - a.FollowerCount )
+      return res.render('topUser', { users: users})
     })
   },
 
