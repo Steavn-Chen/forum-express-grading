@@ -9,6 +9,7 @@ const Favorite = db.Favorite
 const Like = db.Like
 const Followship = db.Followship
 const helpers = require('../_helpers')
+const { Op } = require("sequelize");
 
 const userController = {
   signUpPage: (req, res) => {
@@ -54,13 +55,39 @@ const userController = {
     res.redirect('/signin')
   },
 
+
   getUser: (req, res) => {
     return User.findByPk(req.params.id, {
-      // raw: true,
-      // nest: true,
-      include: [Comment, { model: Comment, include: [Restaurant] }]
-    }).then(user => {
-      return res.render('profile', { user: user.toJSON() })
+      DISTINCT : [
+        { model: Comment, attributes : 'RestaurantId' }
+      ], 
+      include: [
+        Comment,
+        { model: Comment, include: [Restaurant] },
+        { model: User, as: 'Followers' },
+        { model: User, as: 'Followings' },
+        { model: Restaurant, as: 'FavoritedRestaurants' },
+      ]})
+      .then((user) => {
+      const set = new Set()
+      let userComments = user.Comments
+      userComments = userComments.map(d => {
+        return {
+        CommentId: d.id ,
+        RestaurantId: d.RestaurantId,
+        RestaurantImage: d.Restaurant.image
+      }})
+      userComments = userComments.filter(item=> !set.has(item.RestaurantId)? set.add(item.RestaurantId) : false)
+
+      const FollowerCount = user.Followers.length 
+      const FollowingCount = user.Followings.length
+      const FavoriteRestaurantsCount = user.FavoritedRestaurants.length
+      const isFollowing = user.Followings.map(d => d.id).includes(req.user.id)
+      const isFollower = user.Followers.map(d => d.id).includes(req.user.id)
+      const anotherUserId = Number(req.params.id)
+      const userId = req.user.id
+  
+      return res.render('profile', { user: user.toJSON(), anotherUserId, userId, isFollowing, isFollower ,FollowerCount, FollowingCount, FavoriteRestaurantsCount, userComments })
     })
   },
 
@@ -75,36 +102,77 @@ const userController = {
     })
   },
 
+ 
   putUser: (req, res) => {
-    if (!req.body.name || !req.body.email) {
-      req.flash('error_messages', '名字與信箱不能為空!')
-      res.redirect('back')
-    }
-
-    const { file } = req
-    if (file) {
-      imgur.setClientID(IMGUR_CLIENT_ID)
-      imgur.upload(file.path, (err, img) => {
+    User.findAll({
+      where: {
+        email: { [Op.not]: [req.user.email] }
+      }
+    }).then(userData => {
+      let isEmailCheck = userData.map(d =>  d.email ).includes(req.body.email)
+      if (!req.body.name || !req.body.email) {
+        req.flash('error_messages', '名字與信箱不能為空!')
+        res.redirect('back')
+      }
+       else if (isEmailCheck) { 
+        req.flash('error_messages', '此信箱己經有人註冊!')
+        return res.redirect('back')
+      }
+      const { file } = req
+      if (file) {
+        imgur.setClientID(IMGUR_CLIENT_ID)
+        imgur.upload(file.path, (err, img) => {
+          return User.findByPk(req.params.id)
+            .then(user => {
+              user.update({ ...req.body, image: file ? img.data.link : null })
+                .then(() => {
+                  req.flash('success_messages', '使用者資料編輯成功')
+                  return res.redirect(`/users/${req.params.id}`)
+                })
+            })
+        })
+      } else {
         return User.findByPk(req.params.id)
           .then(user => {
-            user.update({ ...req.body, image: file ? img.data.link : null })
+            user.update({ ...req.body, image: user.image })
               .then(() => {
                 req.flash('success_messages', '使用者資料編輯成功')
                 return res.redirect(`/users/${req.params.id}`)
               })
           })
-      })
-    } else {
-      return User.findByPk(req.params.id)
-        .then(user => {
-          user.update({ ...req.body, image: user.image })
-            .then(() => {
-              req.flash('success_messages', '使用者資料編輯成功')
-              return res.redirect(`/users/${req.params.id}`)
-            })
-        })
-    }
+      }
+    })
   },
+
+  // putUser: (req, res) => {
+  //   if (!req.body.name || !req.body.email) {
+  //     req.flash('error_messages', '名字與信箱不能為空!')
+  //     res.redirect('back')
+  //   }
+  //   const { file } = req
+  //   if (file) {
+  //     imgur.setClientID(IMGUR_CLIENT_ID)
+  //     imgur.upload(file.path, (err, img) => {
+  //       return User.findByPk(req.params.id)
+  //         .then(user => {
+  //           user.update({ ...req.body, image: file ? img.data.link : null })
+  //             .then(() => {
+  //               req.flash('success_messages', '使用者資料編輯成功')
+  //               return res.redirect(`/users/${req.params.id}`)
+  //             })
+  //         })
+  //     })
+  //   } else {
+  //     return User.findByPk(req.params.id)
+  //       .then(user => {
+  //         user.update({ ...req.body, image: user.image })
+  //           .then(() => {
+  //             req.flash('success_messages', '使用者資料編輯成功')
+  //             return res.redirect(`/users/${req.params.id}`)
+  //           })
+  //       })
+  //   }
+  // },
 
   addFavorite: (req, res) => {
     const operatorId = helpers.getUser(req).id ? helpers.getUser(req).id : req.user.id
@@ -164,7 +232,8 @@ const userController = {
       isFollowed: req.user.Followings.map(d => d.id).includes(user.id)
     }))
       users = users.sort((a, b) => b.FollowerCount - a.FollowerCount )
-      return res.render('topUser', { users: users})
+      const userId = req.user.id
+      return res.render('topUser', { users: users, userId})
     })
   },
 

@@ -16,10 +16,8 @@
 <h1>人氣餐廳</h1>
 <hr />
 
-
   <div class="row d-flex justify-content-center">
     <div class="col-6">
-
       {{#each restaurants}}
       <div class="card mb-3 border border-3" style="max-width: 540px; min-width:250px">
         <div class="row no-gutters">
@@ -34,13 +32,11 @@
               <div class="btn-group">
                 <a href="/restaurants/{{this.id}}" class="btn btn-primary">show</a>
                 {{#if isFavorited}}
-                {{!-- {{#ifCond this.id 5}} --}}
                 <form action="/favorite/{{this.id}}?_method=DELETE" method="POST"><button type="submit"
                     class="btn btn-danger ml-3">移除最愛</button></form>
                 {{else}}
                 <form action="/favorite/{{this.id}}" method="POST"><button type="submit"
                     class="btn btn-primary ml-3">加到最愛</button></form>
-                {{!-- {{/ifCond}} --}}
                 {{/if}}
               </div>
             </div>
