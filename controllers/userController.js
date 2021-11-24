@@ -82,12 +82,10 @@ const userController = {
       const FollowerCount = user.Followers.length 
       const FollowingCount = user.Followings.length
       const FavoriteRestaurantsCount = user.FavoritedRestaurants.length
-      const isFollowing = user.Followings.map(d => d.id).includes(req.user.id)
       const isFollower = user.Followers.map(d => d.id).includes(req.user.id)
       const anotherUserId = Number(req.params.id)
       const userId = req.user.id
-  
-      return res.render('profile', { user: user.toJSON(), anotherUserId, userId, isFollowing, isFollower ,FollowerCount, FollowingCount, FavoriteRestaurantsCount, userComments })
+      return res.render('profile', { user: user.toJSON(), anotherUserId, userId, isFollower ,FollowerCount, FollowingCount, FavoriteRestaurantsCount, userComments })
     })
   },
 
@@ -143,36 +141,6 @@ const userController = {
       }
     })
   },
-
-  // putUser: (req, res) => {
-  //   if (!req.body.name || !req.body.email) {
-  //     req.flash('error_messages', '名字與信箱不能為空!')
-  //     res.redirect('back')
-  //   }
-  //   const { file } = req
-  //   if (file) {
-  //     imgur.setClientID(IMGUR_CLIENT_ID)
-  //     imgur.upload(file.path, (err, img) => {
-  //       return User.findByPk(req.params.id)
-  //         .then(user => {
-  //           user.update({ ...req.body, image: file ? img.data.link : null })
-  //             .then(() => {
-  //               req.flash('success_messages', '使用者資料編輯成功')
-  //               return res.redirect(`/users/${req.params.id}`)
-  //             })
-  //         })
-  //     })
-  //   } else {
-  //     return User.findByPk(req.params.id)
-  //       .then(user => {
-  //         user.update({ ...req.body, image: user.image })
-  //           .then(() => {
-  //             req.flash('success_messages', '使用者資料編輯成功')
-  //             return res.redirect(`/users/${req.params.id}`)
-  //           })
-  //       })
-  //   }
-  // },
 
   addFavorite: (req, res) => {
     const operatorId = helpers.getUser(req).id ? helpers.getUser(req).id : req.user.id
@@ -248,8 +216,10 @@ const userController = {
 
   removeFollowing: (req, res) => {
     return Followship.findOne({
-      followerId: req.user.id,
-      followingId: req.params.userId
+      where: {
+        followerId: req.user.id,
+        followingId: Number(req.params.userId)
+      }
     }).then(followship => {
       followship.destroy()
         .then(followship => {
