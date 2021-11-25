@@ -11,7 +11,7 @@ const adminService = require('../services/adminServices')
 const adminController = {
   getRestaurants: (req, res) => {
     adminService.getRestaurants(req, res, (data) => {
-      return res.render('admin/restaurants', data)
+      return res.render('admin/restaurants',data )
     })
   // getRestaurants: (req, res) => {
   //   return Restaurant.findAll({
@@ -21,6 +21,18 @@ const adminController = {
   //   }).then((restaurants) => {
   //     return res.render('admin/restaurants', { restaurants: restaurants })
   //   })
+  },
+
+  
+  getRestaurant: (req, res) => {
+    adminService.getRestaurant(req, res, (data) => {
+      return res.render('admin/restaurant', data)
+    })
+    // return Restaurant.findByPk(req.params.id, { include: [Category] }).then(
+    //   (restaurant) => {
+    //     return res.render('admin/restaurant', { restaurant: restaurant.toJSON() })
+    //   }
+    // )
   },
 
   createRestaurant: (req, res) => {
@@ -61,14 +73,6 @@ const adminController = {
         res.redirect('/admin/restaurants')
       })
     }
-  },
-
-  getRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id, { include: [Category] }).then(
-      (restaurant) => {
-        return res.render('admin/restaurant', { restaurant: restaurant.toJSON() })
-      }
-    )
   },
 
   editRestaurant: (req, res) => {
