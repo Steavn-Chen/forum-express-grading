@@ -18,7 +18,15 @@ const adminController = {
   //     }).then(restaurants => {
   //       return res.json({ restaurants: restaurants})
   //     })
-  }
+  },
+
+  getRestaurant: (req, res) => {
+    return Restaurant.findByPk(req.params.id, { include: [Category] }).then(
+      (restaurant) => {
+        return res.json({ restaurant: restaurant })
+      }
+    )
+  },
 }
 
 module.exports = adminController
