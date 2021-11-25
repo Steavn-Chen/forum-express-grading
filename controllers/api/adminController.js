@@ -10,25 +10,12 @@ const adminController = {
     adminService.getRestaurants(req, res, (data) => {
       return res.json(data)
     })
-  // getRestaurants: (req, res) => {
-  //   return Restaurant.findAll({
-  //     raw: true,
-  //     nest: true,
-  //     include: [Category]
-  //     }).then(restaurants => {
-  //       return res.json({ restaurants: restaurants})
-  //     })
   },
 
   getRestaurant: (req, res) => {
     adminService.getRestaurant(req, res, (data) => {
       return res.json(data)
     })
-    // return Restaurant.findByPk(req.params.id, { include: [Category] }).then(
-    //   (restaurant) => {
-    //     return res.json({ restaurant: restaurant })
-    //   }
-    // )
   },
 }
 

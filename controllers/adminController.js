@@ -13,14 +13,6 @@ const adminController = {
     adminService.getRestaurants(req, res, (data) => {
       return res.render('admin/restaurants',data )
     })
-  // getRestaurants: (req, res) => {
-  //   return Restaurant.findAll({
-  //     raw: true,
-  //     nest: true,
-  //     include: [Category]
-  //   }).then((restaurants) => {
-  //     return res.render('admin/restaurants', { restaurants: restaurants })
-  //   })
   },
 
   

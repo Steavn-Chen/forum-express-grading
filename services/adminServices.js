@@ -10,7 +10,6 @@ const adminService = {
       include: [Category]
       }).then(restaurants => {
         callback({ restaurants: restaurants})
-        // return res.json({ restaurants: restaurants})
       })
   },
 
@@ -18,11 +17,9 @@ const adminService = {
     return Restaurant.findByPk(req.params.id, { include: [Category] }).then(
       (restaurant) => {
         callback({ restaurant: restaurant.toJSON() })
-        // return res.render('admin/restaurant', { restaurant: restaurant.toJSON() })
       }
     )
   },
-
 }
 
 module.exports = adminService
