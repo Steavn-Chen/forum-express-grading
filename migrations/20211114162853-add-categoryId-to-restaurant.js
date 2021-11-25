@@ -16,3 +16,4 @@ module.exports = {
     await queryInterface.removeColumn('Restaurants', 'CategoryId')
   }
 }
+
