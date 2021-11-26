@@ -72,10 +72,11 @@ const userController = {
       const set = new Set()
       let userComments = user.Comments
       userComments = userComments.map(d => {
+       console.log(d)
         return {
         CommentId: d.id ,
         RestaurantId: d.RestaurantId,      
-        RestaurantImage: d.Restaurant.image
+        RestaurantImage: d.Restaurant.image ? d.Restaurant.image : null
       }})
       userComments = userComments.filter(item=> !set.has(item.RestaurantId)? set.add(item.RestaurantId) : false)
 

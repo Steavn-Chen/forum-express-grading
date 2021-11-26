@@ -33,7 +33,7 @@ const restController = {
       const data = result.rows.map(r => ({
         ...r.dataValues,
         description: r.dataValues.description.substring(0, 50),
-        categoryName: r.Category.name,
+        categoryName: r.Category.name ? r.Category.name : 'noName',
         isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id),
         isLiked: req.user.LikedRestaurants.map(d => d.id).includes(r.id)
       }))
@@ -44,7 +44,7 @@ const restController = {
         return res.render('restaurants', {
           restaurants: data,
           categories: categories,
-          categoryId: categoryId,
+          categoryId: categoryId ,
           page: page,
           totalPage: totalPage,
           prev: prev,
