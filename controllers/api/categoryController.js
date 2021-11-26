@@ -14,31 +14,19 @@ const categoryController = {
     categoryService.postCategory(req, res, (data) => {
       return res.json(data)
     })
-    // const { name } = req.body
-    // if (!name) {
-    //   req.flash('error_messages', 'name didn\'t exist')
-    //   return res.redirect('back')
-    // } else {
-    //   return Category.create({
-    //     name
-    //   })
-    //     .then(category => {
-    //       res.redirect('/admin/categories')
-    //     })
-    // }
   },
 
   putCategory: (req, res) => {
     categoryService.putCategory(req, res, (data) => {
       return res.json(data)
-      // if (data['status'] === 'error') {
-      //   req.flash('error_messages', data['message'])
-      //   return res.redirect('back')
-      // }
-      // req.flash('success_messages', data['message'])
-      // res.redirect('/admin/categories')
     })
   },
+
+  deleteCategory: (req, res) => {
+    categoryService.deleteCategory(req, res, (data) => {
+      return res.json(data)
+    })
+  }
 }
 
 module.exports = categoryController

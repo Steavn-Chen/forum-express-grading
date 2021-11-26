@@ -31,31 +31,14 @@ const categoryController = {
       req.flash('success_messages', data['message'])
       res.redirect('/admin/categories')
     })
-    // const categoryId = req.params.id
-    // const { name } = req.body
-    // if (!name) {
-    //   req.flash('error_messages', 'name didn\'t exist')
-    //   return res.redirect('back')
-    // } else {
-    //   return Category.findByPk(categoryId)
-    //     .then(category => {
-    //       category.update({ name })
-    //         .then(category => {
-    //           res.redirect('/admin/categories')
-    //         })
-    //     })
-    // }
   },
 
   deleteCategory: (req, res) => {
-    const categoryId = req.params.id
-    return Category.findByPk(categoryId)
-      .then(category => {
-        category.destroy()
-          .then(category => {
-            res.redirect('/admin/categories')
-          })
-      })
+    categoryService.deleteCategory(req, res, (data) => {
+      if (data['status'] === 'success') {
+        return res.redirect('/admin/categories')
+      }
+    })
   }
 }
 
