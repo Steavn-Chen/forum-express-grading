@@ -28,6 +28,17 @@ const categoryController = {
     // }
   },
 
+  putCategory: (req, res) => {
+    categoryService.putCategory(req, res, (data) => {
+      return res.json(data)
+      // if (data['status'] === 'error') {
+      //   req.flash('error_messages', data['message'])
+      //   return res.redirect('back')
+      // }
+      // req.flash('success_messages', data['message'])
+      // res.redirect('/admin/categories')
+    })
+  },
 }
 
 module.exports = categoryController
