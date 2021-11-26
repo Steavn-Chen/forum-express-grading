@@ -7,7 +7,7 @@
       <div class="card-body  my-3">
         <h4 class="card-title">名稱: {{user.name}}</h4>
         <h5 class="card-text my-2">信箱: {{user.email}}</h5>
-        <h6 class="card-text mt-3">{{user.Comments.length}} 間己評論的餐廳</h6>
+        <h6 class="card-text mt-3">{{user.Comments.length}} 則己評論的餐廳</h6>
         <h6 class="card-text ">{{user.FavoritedRestaurants.length}} 間己收藏的餐廳</h6>
         <h6 class="card-text ">{{user.Followings.length}} followings (追蹤者)</h6>
         <h6 class="card-text mb-3">{{user.Followers.length}} followers (追隨者)</h6>
@@ -45,7 +45,7 @@
   </div>
   <div class="col-8">
     <div class="card">
-      <div class="card-header">{{userComments.length}} 則己評論的餐廳</div>
+      <div class="card-header">{{userComments.length}} 間己評論的餐廳</div>
       <div class="text-left m-3 ">
         {{#each userComments}}
         <a href="/restaurants/{{this.RestaurantId}}"><img src="{{this.RestaurantImage}}" class="rounded mt-2 ml-2"

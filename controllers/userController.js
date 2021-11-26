@@ -74,7 +74,7 @@ const userController = {
       userComments = userComments.map(d => {
         return {
         CommentId: d.id ,
-        RestaurantId: d.RestaurantId,
+        RestaurantId: d.RestaurantId,      
         RestaurantImage: d.Restaurant.image
       }})
       userComments = userComments.filter(item=> !set.has(item.RestaurantId)? set.add(item.RestaurantId) : false)
