@@ -10,23 +10,23 @@ const adminService = {
       raw: true,
       nest: true,
       include: [Category]
-      }).then(restaurants => {
-        callback({ restaurants: restaurants})
-      })
+    }).then(restaurants => {
+      callback({ restaurants })
+    })
   },
 
   getRestaurant: (req, res, callback) => {
-    return Restaurant.findByPk(req.params.id, { include: [Category] }).then(
-      (restaurant) => {
+    return Restaurant
+      .findByPk(req.params.id, { include: [Category] })
+      .then((restaurant) => {
         callback({ restaurant: restaurant.toJSON() })
-      }
-    )
+      })
   },
 
   postRestaurant: (req, res, callback) => {
     const { categoryId } = req.body
     if (!req.body.name) {
-      return callback({ status: 'error', message: 'name didn`t exist'})
+      return callback({ status: 'error', message: 'name didn`t exist' })
     }
     const { file } = req
     if (file) {
@@ -37,7 +37,7 @@ const adminService = {
           image: file ? img.data.link : null,
           CategoryId: categoryId
         }).then((restaurant) => {
-          callback({ status: 'success', message: 'restaurant was successfully created'})
+          callback({ status: 'success', message: 'restaurant was successfully created' })
         })
       })
     } else {
@@ -84,10 +84,10 @@ const adminService = {
       .then(restaurant => {
         restaurant.destroy()
           .then(restaurant => {
-            callback({ status: 'success', message: '己成功刪除!'})
+            callback({ status: 'success', message: '己成功刪除!' })
           })
       })
-  },
+  }
 }
 
 module.exports = adminService

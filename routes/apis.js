@@ -19,6 +19,3 @@ router.put('/admin/categories/:id', categoryController.putCategory)
 router.delete('/admin/categories/:id', categoryController.deleteCategory)
 
 module.exports = router
-
-
-

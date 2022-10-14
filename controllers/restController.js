@@ -22,7 +22,7 @@ const restController = {
     Restaurant.findAndCountAll({
       include: Category,
       where: whereQuery,
-      offset: offset,
+      offset,
       limit: pageLimit
     }).then(result => {
       const page = Number(req.query.page) || 1
@@ -43,12 +43,12 @@ const restController = {
       }).then(categories => {
         return res.render('restaurants', {
           restaurants: data,
-          categories: categories,
-          categoryId: categoryId ,
-          page: page,
-          totalPage: totalPage,
-          prev: prev,
-          next: next
+          categories,
+          categoryId,
+          page,
+          totalPage,
+          prev,
+          next
         })
       })
     })
@@ -69,8 +69,8 @@ const restController = {
       restaurant.increment({ viewCounts: 1 })
       return res.render('restaurant', {
         restaurant: restaurant.toJSON(),
-        isFavorited: isFavorited,
-        isLiked: isLiked
+        isFavorited,
+        isLiked
       })
     })
   },
@@ -93,8 +93,8 @@ const restController = {
       })
     ]).then(([restaurants, comments]) => {
       return res.render('feeds', {
-        restaurants: restaurants,
-        comments: comments
+        restaurants,
+        comments
       })
     })
   },
@@ -106,7 +106,7 @@ const restController = {
         Comment,
         { model: User, as: 'FavoritedUsers' }
       ]
-    }).then(restaurant => {
+    }).then(restaurant => {console.log(restaurant)
       return res.render('dashboard', {
         restaurant: restaurant.toJSON()
       })

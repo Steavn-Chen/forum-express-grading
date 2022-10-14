@@ -1,6 +1,3 @@
-// const fs = require('fs')
-const imgur = require('imgur-node-api')
-const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const db = require('../models')
 const Category = db.Category
 const Restaurant = db.Restaurant
@@ -11,20 +8,14 @@ const adminService = require('../services/adminServices')
 const adminController = {
   getRestaurants: (req, res) => {
     adminService.getRestaurants(req, res, (data) => {
-      return res.render('admin/restaurants',data )
+      return res.render('admin/restaurants', data)
     })
   },
 
-  
   getRestaurant: (req, res) => {
     adminService.getRestaurant(req, res, (data) => {
       return res.render('admin/restaurant', data)
     })
-    // return Restaurant.findByPk(req.params.id, { include: [Category] }).then(
-    //   (restaurant) => {
-    //     return res.render('admin/restaurant', { restaurant: restaurant.toJSON() })
-    //   }
-    // )
   },
 
   createRestaurant: (req, res) => {
@@ -32,11 +23,11 @@ const adminController = {
       raw: true,
       nest: true
     }).then(categories => {
-      return res.render('admin/create', { categories: categories })
+      return res.render('admin/create', { categories })
     })
   },
 
-  postRestaurant: (req, res) => {console.log(req.body)
+  postRestaurant: (req, res) => {
     adminService.postRestaurant(req, res, (data) => {
       if (data['status'] === 'error') {
         req.flash('error_messages', data['message'])
@@ -44,7 +35,7 @@ const adminController = {
       }
       req.flash('success_messages', data['message'])
       res.redirect('/admin/restaurants')
-    }) 
+    })
   },
 
   editRestaurant: (req, res) => {
@@ -55,7 +46,7 @@ const adminController = {
       return Restaurant.findByPk(req.params.id).then(
         (restaurant) => {
           return res.render('admin/create', {
-            categories: categories,
+            categories,
             restaurant: restaurant.toJSON()
           })
         })
@@ -63,15 +54,12 @@ const adminController = {
   },
 
   putRestaurant: (req, res) => {
-    const { categoryId } = req.body
     if (!req.body.name) {
       req.flash('error_messages', 'name didn`t exist')
       return res.redirect('back')
-      }
-      req.flash('success_message', data['message'])
-      return res.redirect('/admin/restaurants')
-    
-  
+    }
+    req.flash('success_message', data['message'])
+    return res.redirect('/admin/restaurants')
   },
 
   deleteRestaurant: (req, res) => {
@@ -84,7 +72,7 @@ const adminController = {
 
   getUsers: (req, res) => {
     return User.findAll({ raw: true }).then(users => {
-      return res.render('admin/users', { users: users })
+      return res.render('admin/users', { users })
     })
   },
 

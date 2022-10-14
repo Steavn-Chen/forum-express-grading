@@ -1,13 +1,10 @@
-const db = require('../models')
-const Category = db.Category
-
 const categoryService = require('../services/categoryServices')
 
 const categoryController = {
 
   getCategories: (req, res) => {
     categoryService.getCategories(req, res, (data) => {
-      return res.render('admin/categories',data)
+      return res.render('admin/categories', data)
     })
   },
 
@@ -35,7 +32,7 @@ const categoryController = {
 
   deleteCategory: (req, res) => {
     categoryService.deleteCategory(req, res, (data) => {
-      if (data['status'] === 'success') {
+      if (data["status"] === 'success') {
         return res.redirect('/admin/categories')
       }
     })
